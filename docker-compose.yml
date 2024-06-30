@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: laradock/nginx:2.9
+    container_name: laradock-nginx
+    ports:
+      - "${NGINX_HOST_HTTP_PORT}:80"
+      - "${NGINX_HOST_HTTPS_PORT}:443"
+    volumes:
+      - ${NGINX_HOST_LOG_PATH}:/var/log/nginx
+      - ${NGINX_SITES_PATH}:/etc/nginx/sites-available
+      - ${NGINX_SSL_PATH}:/etc/nginx/ssl
+    networks:
+      - frontend
+      - backend
+    depends_on:
+      - php-fpm
+
+  phpmyadmin:
+    image: laradock/phpmyadmin:latest
+    container_name: laradock-phpmyadmin
+    environment:
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      PMA_USER: "${PMA_USER}"
+      PMA_PASSWORD: "${PMA_PASSWORD}"
+    ports:
+      - "${PMA_PORT}:80"
+    networks:
+      - frontend
+      - backend
+    depends_on:
+      - mysql
+
+  mysql:
+    image: laradock/mysql:latest
+    container_name: laradock-mysql
+    environment:
+      MYSQL_DATABASE: "${MYSQL_DATABASE}"
+      MYSQL_USER: "doutorIE"
+      MYSQL_PASSWORD: "12345678"
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      MYSQL_ENTRYPOINT_INITDB: "${MYSQL_ENTRYPOINT_INITDB}"
+    ports:
+      - "${MYSQL_PORT}:3306"
+    networks:
+      - backend
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  workspace:
+    image: laradock/workspace:2.9
+    container_name: laradock-workspace
+    volumes:
+      - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+    networks:
+      - frontend
+      - backend
+    ports:
+      - "${WORKSPACE_SSH_PORT}:22"
+    environment:
+      - "WORKSPACE_INSTALL_NODE=true"
+      - "WORKSPACE_INSTALL_YARN=true"
+      - "WORKSPACE_INSTALL_PHP=true"
+      - "WORKSPACE_INSTALL_COMPOSER=true"
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local
