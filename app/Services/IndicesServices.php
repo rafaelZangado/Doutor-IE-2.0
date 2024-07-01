@@ -28,6 +28,21 @@ class IndicesServices
         return $indice;
     }
 
+    public function update(array $dados, int $id)
+    {
+        return $this->indicesRepository->update($dados, $id);
+    }
+
+    public function delete(int $id)
+    {
+        return $this->indicesRepository->delete($id);
+    }
+
+    public function find(int $id)
+    {
+        return $this->indicesRepository->find($id);
+    }
+
     /**
      * Adiciona os subíndices associados a um índice.
      *
@@ -63,5 +78,5 @@ class IndicesServices
         return $subindiceCriado;
     }
 
-    
+
 }
