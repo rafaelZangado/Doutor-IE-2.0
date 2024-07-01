@@ -103,7 +103,7 @@ class LivroController extends Controller
 
         $xmlData = $request->input('xml_data');
         $resposta = $this->indicesServices->importarIndices($livroId, $xmlData);
-        return response()->json(['message' => 'Índices XML importados com sucesso para o livro ' . $livroId]);
+        return response()->json(['message' => 'Índices XML importados com sucesso para o livro ' . $resposta, $resposta]);
     }
 
 }
