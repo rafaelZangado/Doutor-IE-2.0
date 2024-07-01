@@ -2,6 +2,9 @@
 
 namespace Tests\Unit;
 
+use App\Models\Indice;
+use App\Models\Livro;
+use App\Models\User;
 use Tests\TestCase;
 use App\Services\LivrosServices;
 use App\Repositories\LivrosRepository;
@@ -20,44 +23,55 @@ class LivrosServicesTest extends TestCase
         $this->livrosService = new LivrosServices($this->livrosRepositoryMock);
     }
 
-    public function testAddLivro()
+    public function testCadastroIndice()
     {
-        // Dados simulados de um novo livro
-        $livroData = [
-            'titulo' => 'Novo Livro',
-            'usuario_publicador_id' => 1,
-            'indices' => [
-                [
-                    'titulo' => 'Índice 1',
-                    'pagina' => 10,
-                    'subindices' => [
-                        [
-                            'titulo' => 'Subíndice 1.1',
-                            'pagina' => 12,
-                        ],
-                    ],
-                ],
-            ],
+        $livro = Livro::factory()->create();
+
+        $this->actingAs($livro);
+
+        $dados = [
+            'livro_id' => $livro->id,
+            'titulo' => 'Novo Índice',
+            'pagina' => 10,
         ];
 
-        // Configuração do mock
-        $this->livrosRepositoryMock->expects($this->once())
-            ->method('create')
-            ->with($this->callback(function ($data) use ($livroData) {
-                // Verifica se os dados passados correspondem aos esperados
-                return $data['titulo'] === $livroData['titulo']
-                    && $data['usuario_publicador_id'] === $livroData['usuario_publicador_id'];
-            }))
-            ->willReturn((object) $livroData);
+        $response = $this->postJson('/api/v1/indices', $dados);
 
-        $livroCriado = $this->livrosService->add($livroData);
+        $response->assertStatus(201);
 
-        $this->assertInstanceOf(\stdClass::class, $livroCriado);
-        $this->assertEquals('Novo Livro', $livroCriado->titulo);
-        $this->assertCount(1, $livroCriado->indices);
-        $this->assertEquals('Índice 1', $livroCriado->indices[0]->titulo);
-        $this->assertCount(1, $livroCriado->indices[0]->subindices);
-        $this->assertEquals('Subíndice 1.1', $livroCriado->indices[0]->subindices[0]->titulo);
+        $response->assertJson([
+            'livro_id' => $livro->id,
+            'titulo' => 'Novo Índice',
+            'pagina' => 10,
+        ]);
+
+        $this->assertDatabaseHas('indices', [
+            'livro_id' => $livro->id,
+            'titulo' => 'Novo Índice',
+            'pagina' => 10,
+        ]);
+    }
+
+    public function testAtualizarIndice()
+    {
+        $indice = Indice::factory()->create([
+            'titulo' => 'Índice Antigo',
+            'pagina' => 5,
+        ]);
+
+        $dadosAtualizados = [
+            'titulo' => 'Índice Atualizado',
+            'pagina' => 15,
+        ];
+
+        $response = $this->putJson("/api/v1/indices/{$indice->id}", $dadosAtualizados);
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'id' => $indice->id,
+                'titulo' => 'Índice Atualizado',
+                'pagina' => 15,
+            ]);
     }
 
 }

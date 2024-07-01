@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Models\User;
 use Tests\TestCase;
 use App\Models\Livro;
 use App\Services\LivrosServices;
@@ -18,25 +19,55 @@ class LivroControllerTest extends TestCase
         $this->livrosServiceMock = $this->createMock(LivrosServices::class);
     }
 
-    public function testStoreLivro()
+    public function testeParaCadastrarLivro()
     {
         // POST
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
         $livroData = [
-            'titulo' => 'Novo Livro',
-            'usuario_publicador_id' => 1,
+            'titulo' => 'Livro de Teste',
         ];
 
-        // Configuração do mock
-        $this->livrosServiceMock->expects($this->once())
-            ->method('add')
-            ->with($livroData)
-            ->willReturn((object) $livroData);
-        $response = $this->post('/api/v1/livros', $livroData);
+        $response = $this->postJson('/api/v1/livros', $livroData);
 
+        $response->assertStatus(201)
+            ->assertJson([
+                'titulo' => 'Livro de Teste',
+            ]);
 
-        $response->assertStatus(201);
-        $response->assertJsonFragment($livroData);
+        $livro = Livro::where('titulo', 'Livro de Teste')->first();
+        $this->assertNotNull($livro);
+
     }
 
-  
+    public function testeParaEditarLivro()
+    {
+
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        // Criar um livro inicial
+        $livro = Livro::factory()->create([
+            'titulo' => 'Livro Antigo',
+            'usuario_publicador_id' => $user->id,
+        ]);
+
+        $response = $this->putJson('/api/v1/livros/' . $livro->id, [
+            'titulo' => 'Livro Atualizado',
+        ]);
+
+        $response->assertStatus(200)
+                ->assertJson([
+                    'message' => 'Livro atualizado com sucesso',
+                    'data' => [
+                        'id' => $livro->id,
+                        'titulo' => 'Livro Atualizado',
+                    ],
+                ]);
+
+        $livroAtualizado = Livro::find($livro->id);
+        $this->assertEquals('Livro Atualizado', $livroAtualizado->titulo);
+    }
+
 }
