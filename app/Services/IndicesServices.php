@@ -79,4 +79,45 @@ class IndicesServices
     }
 
 
+    /**
+     * Importar índices XML para um livro específico.
+     *
+     * @param int $livroId
+     * @param string $xmlData
+     * @return bool
+     */
+    public function importarIndices(int $livroId, string $xmlData): bool
+    {
+
+
+        $indices = $this->parseXML($xmlData);
+
+        foreach ($indices as $indice) {
+            $dados = [
+                'livro_id' => $livroId,
+                'indice_pai_id' => $indice['indice_pai_id'],
+                'titulo' => $indice['titulo'],
+                'pagina' => $indice['pagina'],
+            ];
+
+            $this->indicesRepository->create($dados);
+        }
+
+        return true;
+    }
+
+    /**
+     * Exemplo simplificado de parse de XML.
+     *
+     * @param string $xmlData
+     * @return array
+     */
+    protected function parseXML(string $xmlData): array
+    {
+
+        return [
+            ['indice_pai_id' => 1, 'titulo' => 'Título 1', 'pagina' => 10],
+            ['indice_pai_id' => null, 'titulo' => 'Título 2', 'pagina' => 20],
+        ];
+    }
 }
