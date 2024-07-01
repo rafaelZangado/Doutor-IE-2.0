@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\LivroRequest;
-use App\Models\Livro;
 use App\Services\IndicesServices;
 use App\Services\LivrosServices;
 use Illuminate\Http\Request;
@@ -33,16 +32,6 @@ class LivroController extends Controller
     {
         $livros = $this->livrosServices->getAllWithFilters($request->titulo, $request->titulo_do_indice);
         return response()->json($livros);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -122,9 +111,7 @@ class LivroController extends Controller
     {
 
         $xmlData = $request->input('xml_data');
-
         $resposta = $this->indicesServices->importarIndices($livroId, $xmlData);
-        // Retornar resposta adequada, como JSON ou uma view, conforme necessário
         return response()->json(['message' => 'Índices XML importados com sucesso para o livro ' . $livroId]);
     }
 
