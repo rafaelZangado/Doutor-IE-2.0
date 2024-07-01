@@ -32,20 +32,42 @@
             return $livro;
         }
 
+        /**
+         * Edita o livro puxando pelo id e recebe os dados.
+         *
+         * @param  array  $dados
+         * @param  int  $id
+         */
         public function edit(array $dados, int $id)
         {
             return $this->livrosRepository->update($dados, $id);
         }
 
+        /**
+         * Remove o livro buscando pelo id.
+         *
+         * @param  int  $id
+         */
         public function remove(int $id)
         {
             return $this->livrosRepository->delete($id);
         }
 
+        /**
+         * Faz um get de todos os livros.
+         *
+         * @return \Illuminate\Database\Eloquent\Collection
+         */
         public function getAll()
         {
             return $this->livrosRepository->list();
         }
+
+         /**
+         * Busca o livro pelo ID
+         *
+         * @param  int  $id
+         */
         public function getById(int $id)
         {
             return $this->livrosRepository->find($id);
