@@ -13,6 +13,26 @@ class IndiceRequest extends FormRequest
      */
     public function rules()
     {
+        if ($this->isMethod('put') || $this->isMethod('patch')) {
+            return [
+                'livro_id' => [
+                    'sometimes',
+                    'exists:livros,id'
+                ],
+                'indice_pai_id' => [
+                    'sometimes',
+                ],
+                'titulo' => [
+                    'sometimes',
+                    'string'
+                ],
+                'pagina' => [
+                    'sometimes',
+                    'integer'
+                ],
+            ];
+        }
+
         return [
             'livro_id' => [
                 'required',
@@ -30,5 +50,6 @@ class IndiceRequest extends FormRequest
                 'integer'
             ],
         ];
+
     }
 }
