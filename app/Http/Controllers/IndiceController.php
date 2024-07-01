@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\IndiceRequest;
-use Illuminate\Http\Request;
 use App\Services\IndicesServices;
 
 class IndiceController extends Controller
@@ -16,29 +15,9 @@ class IndiceController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\IndiceRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(IndiceRequest $request)
@@ -49,37 +28,23 @@ class IndiceController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\IndiceRequest $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(IndiceRequest $request, int $id)
     {
-        //
+        $dados = $request->validated();
+        $indice = $this->indicesServices->update($dados, $id);
+        if($indice){
+            return response()->json(['message' => 'Atualizado com sucesso',$indice], 200);
+        }
+        else {
+            return response()->json(['message' => 'ops, não foi possivel atualizar'], 200);
+        }
+
     }
 
     /**
@@ -90,6 +55,12 @@ class IndiceController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $deleted = $this->indicesServices->delete($id);
+        if($deleted){
+            return response()->json(['message' => 'Deletado com sucesso',$deleted], 204);
+        }
+        else {
+            return response()->json(['message' => 'ops, alguma coisa deu errado'], 404);
+        }
     }
 }
