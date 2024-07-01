@@ -47,16 +47,6 @@ class LivroController extends Controller
         return response()->json($resposta, 201);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -67,23 +57,24 @@ class LivroController extends Controller
     public function edit($id)
     {
         $livro = $this->livrosServices->getById($id);
-
         return response()->json($livro, 200);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \App\Http\Requests\LivroRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(LivroRequest $request, $id)
     {
         $dados = $request->validated();
         $livro = $this->livrosServices->edit($dados, $id);
 
-        return response()->json($livro, 200);
+        return $livro ?
+            response()->json(['message' => 'Livro atualizado com sucesso', 'data' => $livro], 200) :
+            response()->json(['message' => 'ops, não foi possivel atualizar'], 200);
     }
 
     /**
