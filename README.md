@@ -7,9 +7,10 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About Laravel
+## PROJETO
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Este projeto utiliza o framework Laravel para gerenciar livros e índices através de uma API RESTful. 
+Abaixo estão os principais componentes e funcionalidades implementadas:
 
 - [Simple, fast routing engine](https://laravel.com/docs/routing).
 - [Powerful dependency injection container](https://laravel.com/docs/container).
@@ -21,48 +22,65 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 
 Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-## Learning Laravel
+## Modelos
+- **[Livro]: Gerencia informações sobre livros, incluindo título e relacionamentos.**
+- **[Indice]: Gerencia índices associados aos livros, com título, página e relacionamentos hierárquicos.**
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 🚀 Controladores
+## 🚀 Repositórios 
+## 🚀 Serviços
+## 🧪 Testes Unitários:
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+As rotas da API:
 
-## Laravel Sponsors
+- **[POST]** v1/auth/token: Recuperar token de acesso do usuário para poder acessar as outras rotas
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+**Livros:**
+- **[GET]** v1/livros: Listar livros
+- **[POST]** v1/livros: Cadastrar livro.
+- **[PUT]** v1/livros/{livro}: Atualizar livro.
+- **[DELETE]** v1/livros/destroy/{livro}: Deletar livro.
 
-### Premium Partners
+**Índice:**
+- **[POST]** v1/indices: Cadastrar Indices.
+- **[PUT]** v1/indices/{id}: Atualizar Indices.
+- **[DELETE]** v1/indices/destroy/{id}: Deletar Indices.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+- **[POST]** v1/livros/{livroId}/importar-indices-xml: Importar índices em xml
 
-## Contributing
+## 🛠️ Configuração DOCKER:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Para construção do docker foi utilizado o **[LaraDocker](https://github.com/laradock/laradock)**
 
-## Code of Conduct
+```env
+### MYSQL #################################################
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+MYSQL_VERSION=latest
+MYSQL_DATABASE=desafio
+MYSQL_USER=doutorIE
+MYSQL_PASSWORD=12345678
+MYSQL_PORT=3306
+MYSQL_ROOT_PASSWORD=root
+MYSQL_ENTRYPOINT_INITDB=./mysql/docker-entrypoint-initdb.d
 
-## Security Vulnerabilities
+### PHP MY ADMIN ##########################################
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+# Accepted values: mariadb - mysql
+PMA_DB_ENGINE=mysql
 
-## License
+# Credentials/Port:
+PMA_USER=doutorIE
+PMA_PASSWORD=12345678
+PMA_ROOT_PASSWORD=secret
+PMA_PORT=1010
+PMA_MAX_EXECUTION_TIME=600
+PMA_MEMORY_LIMIT=256M
+PMA_UPLOAD_LIMIT=2G
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-# Doutor-IE
-# Doutor-IE-2.0
+WORKSPACE_SSH_PORT=9999
+
+
+WORKSPACE_SSH_PORT=9999
+
+
