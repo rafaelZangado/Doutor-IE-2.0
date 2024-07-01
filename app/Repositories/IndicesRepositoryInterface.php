@@ -5,5 +5,11 @@ namespace App\Repositories;
 interface IndicesRepositoryInterface
 {
     public function create(array $dados);
-    // Adicione outros métodos conforme necessário
+
+    public function update(array $dados, int $int);
+
+    public function delete(int $id);
+
+    public function find(int $id);
+
 }
