@@ -30,7 +30,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('v1/livros', [LivroController::class, 'index']);
     Route::post('v1/livros', [LivroController::class, 'store']);
     Route::put('v1/livros/{livro}', [LivroController::class, 'update']);
-    Route::delete('v1/livros/{livro}', [LivroController::class, 'destroy']);
+    Route::delete('v1/livros/destroy/{livro}', [LivroController::class, 'destroy']);
 
     //Rotas do Indice
     Route::post('v1/indices', [IndiceController::class, 'store']);
